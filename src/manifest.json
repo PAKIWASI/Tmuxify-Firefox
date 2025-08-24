@@ -15,7 +15,13 @@
   }],
   "browser_action": {
     "default_popup": "popup/popup.html",
-    "default_title": "Tmuxify"
+    "default_title": "Tmuxify",
+    "default_icon": {
+        "16": "icons/icon-16.png",
+        "32": "icons/icon-32.png",
+        "48": "icons/icon-48.png",
+        "128": "icons/icon-128.png"
+    }
   },
   "commands": {
     "toggle-prefix": {
