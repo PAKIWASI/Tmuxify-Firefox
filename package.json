@@ -1,0 +1,30 @@
+{
+  "name": "tmuxify",
+  "version": "1.0.0",
+  "description": "Firefox extension for tmux-like tab navigation",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run copy-assets",
+    "copy-assets": "mkdir -p dist/popup dist/icons && cp src/manifest.json dist/ && cp src/popup/popup.html dist/popup/ 2>/dev/null || true",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "web-ext:run": "web-ext run --source-dir=./dist",
+    "dev": "npm run build && npm run web-ext:run",
+    "clean": "rm -rf dist web-ext-artifacts",
+    "watch": "tsc --watch"
+  },
+  "keywords": ["firefox", "extension", "tmux", "tabs", "navigation"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/webextension-polyfill": "^0.12.3",
+    "eslint": "^9.33.0",
+    "globals": "^16.3.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1",
+    "web-ext": "^8.9.0",
+    "web-ext-types": "^3.2.1",
+    "webextension-polyfill": "^0.12.0"
+  }
+}

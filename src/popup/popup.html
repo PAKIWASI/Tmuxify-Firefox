@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #00ff00;
+      margin: 0;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 15px;
+    }
+    
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #00ff00;
+    }
+    
+    .subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+    }
+    
+    .commands {
+      margin: 20px 0;
+    }
+    
+    .command-group {
+      margin-bottom: 15px;
+    }
+    
+    .command-title {
+      font-weight: bold;
+      color: #00ff00;
+      font-size: 14px;
+      margin-bottom: 8px;
+      border-left: 3px solid #00ff00;
+      padding-left: 8px;
+    }
+    
+    .command {
+      margin: 5px 0;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    .key {
+      background: #333;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #00ff00;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    
+    .status {
+      text-align: center;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 15px 0;
+      font-size: 12px;
+    }
+    
+    .status.active {
+      background: rgba(0, 255, 0, 0.2);
+      border: 1px solid #00ff00;
+    }
+    
+    .status.inactive {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #333;
+      color: #888;
+    }
+    
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      margin-top: 20px;
+      border-top: 1px solid #333;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🖥️ TMUXIFY</div>
+    <div class="subtitle">Navigate tabs like a pro</div>
+  </div>
+  
+  <div class="commands">
+    <div class="command-group">
+      <div class="command-title">Activation</div>
+      <div class="command">
+        <span class="key">Alt+A</span>
+        Enter prefix mode
+      </div>
+    </div>
+    
+    <div class="command-group">
+      <div class="command-title">Tab Navigation</div>
+      <div class="command">
+        <span class="key">0-9</span>
+        Switch to tab by number
+      </div>
+      <div class="command">
+        <span class="key">n</span>
+        Next tab
+      </div>
+      <div class="command">
+        <span class="key">p</span>
+        Previous tab
+      </div>
+    </div>
+    
+    <div class="command-group">
+      <div class="command-title">Tab Management</div>
+      <div class="command">
+        <span class="key">c</span>
+        Create new tab
+      </div>
+      <div class="command">
+        <span class="key">x</span>
+        Close current tab
+      </div>
+    </div>
+    
+    <div class="command-group">
+      <div class="command-title">Window Splitting</div>
+      <div class="command">
+        <span class="key">h</span>
+        Split horizontally
+      </div>
+      <div class="command">
+        <span class="key">v</span>
+        Split vertically
+      </div>
+    </div>
+    
+    <div class="command-group">
+      <div class="command-title">General</div>
+      <div class="command">
+        <span class="key">Esc</span>
+        Exit prefix mode
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    Press Alt+A THEN any command key
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
+

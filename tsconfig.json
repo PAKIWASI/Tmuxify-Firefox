@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "lib": ["ES2020", "DOM"],
+    "declaration": false,
+    "removeComments": true,
+    "types": ["webextension-polyfill", "web-ext-types"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "web-ext-artifacts"]
+}
+
+
+

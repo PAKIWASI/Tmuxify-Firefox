@@ -1,0 +1,10 @@
+
+
+
+
+node_modules/
+dist/
+*.zip
+*.xpi
+*.crx
+whattodo.txt
