@@ -24,13 +24,7 @@ interface CloseTabMessage extends BaseMessage {
     action: 'closeTab';
 }
 
-interface SplitHorizontallyMessage extends BaseMessage {
-    action: 'splitHorizontally';
-}
 
-interface SplitVerticallyMessage extends BaseMessage {
-    action: 'splitVertically';
-}
 
 
 let prefix_mode = false;
@@ -124,19 +118,7 @@ function handle_tmux_commands(ev: KeyboardEvent) {
             deactivate_prefix_mode();
             break;
         }
-        case 'h': {
-            console.log("split horizontally");
-            const msgh:SplitHorizontallyMessage = { action: "splitHorizontally"};
-            browser.runtime.sendMessage(msgh);
-            break;
-        }
-        case 'v': {
-            console.log("split vertically");
-            const msgv: SplitVerticallyMessage = { action: "splitVertically"};
-            browser.runtime.sendMessage(msgv);
-            break; 
-        } 
-        default:
+      default:
             console.log("unknown command:", ev.key);
     }
     // Deactivate after command (except escape)

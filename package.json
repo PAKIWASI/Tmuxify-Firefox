@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && tsc && npm run copy-assets",
-    "copy-assets": "mkdir -p dist/popup dist/icons && cp src/manifest.json dist/ && cp src/popup/popup.html dist/popup/ 2>/dev/null || true",
+    "copy-assets": "mkdir -p dist/popup dist/icons && cp src/manifest.json dist/ && cp src/icons/* dist/icons/ && cp src/popup/popup.html dist/popup/ 2>/dev/null || true",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "web-ext:run": "web-ext run --source-dir=./dist",

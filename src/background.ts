@@ -25,13 +25,7 @@ interface CloseTabMessage extends BaseMessage {
     action: 'closeTab';
 }
 
-interface SplitHorizontallyMessage extends BaseMessage {
-    action: 'splitHorizontally';
-}
 
-interface SplitVerticallyMessage extends BaseMessage {
-    action: 'splitVertically';
-}
 // Union type for all possible messages
 type ExtensionMessage = 
     | CreateTabMessage 
@@ -39,9 +33,6 @@ type ExtensionMessage =
     | PrevTabMessage 
     | SwitchTabMessage 
     | CloseTabMessage
-    | SplitHorizontallyMessage
-    | SplitVerticallyMessage
-
 
 
 // Listen for messages from content script
@@ -66,12 +57,6 @@ browser.runtime.onMessage.addListener(async (Message: any) => {
                 break;
             case 'closeTab':
                 await closeCurrentTab();
-                break;
-            case 'splitHorizontally':
-                await splitWindow("horizontal");
-                break;
-            case 'splitVertically':
-                await splitWindow("vertical");
                 break;
         }
     } catch (error) {
@@ -151,47 +136,5 @@ async function getCurrentTab(): Promise<browser.tabs.Tab> {
     return tabs[0] || null;
 }
 
-
-
-async function splitWindow(direction: "horizontal" | "vertical") {
-
-    const currentWin = await browser.windows.getCurrent();
-    const tabs = await browser.tabs.query({ currentWindow: true, active: true });
-    const activeTab = tabs[0];
-    if (!activeTab) return;
-
-    if (direction === "horizontal") {
-        const halfWidth = Math.floor(currentWin.width! / 2);
-        await browser.windows.update(currentWin.id!, {
-            left: 0,
-            top: currentWin.top,
-            width: halfWidth,
-            height: currentWin.height
-        });
-        await browser.windows.create({
-            url: activeTab.url,
-            left: halfWidth,
-            top: currentWin.top,
-            width: halfWidth,
-            height: currentWin.height
-        });
-    } 
-    else {
-        const halfHeight = Math.floor(currentWin.height! / 2);
-        await browser.windows.update(currentWin.id!, {
-            left: currentWin.left,
-            top: 0,
-            width: currentWin.width,
-            height: halfHeight
-        });
-        await browser.windows.create({
-            url: activeTab.url,
-            left: currentWin.left,
-            top: halfHeight,
-            width: currentWin.width,
-            height: halfHeight
-        });
-    }
-}
 
 

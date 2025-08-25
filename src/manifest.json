@@ -3,7 +3,7 @@
   "name": "Tmuxify",
   "version": "1.0.0",
   "description": "Switch between tabs like a pro with tmux-style controls",
-  "permissions": ["tabs", "activeTab", "storage"],
+  "permissions": ["tabs", "activeTab", "windows"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
