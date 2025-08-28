@@ -24,6 +24,10 @@ interface CloseTabMessage extends BaseMessage {
     action: 'closeTab';
 }
 
+interface LastTabMessage extends BaseMessage {
+    action: 'lastTab'
+}
+
 
 
 
@@ -76,19 +80,16 @@ function handle_tmux_commands(ev: KeyboardEvent) {
     ev.stopPropagation();
     switch(ev.key.toLowerCase()) {
         case 'c': {
-            console.log("create new tab");
             const msgc:CreateTabMessage = { action: "createTab" };
             browser.runtime.sendMessage(msgc);
             break;
         }
         case 'n': {
-            console.log("next tab");
             const msgn:NextTabMessage = {action: "nextTab"};
             browser.runtime.sendMessage(msgn);
             break;
         }
         case 'p': {
-            console.log("previous tab");
             const msgp: PrevTabMessage = { action: "prevTab" };
             browser.runtime.sendMessage(msgp);
             break;
@@ -102,24 +103,24 @@ function handle_tmux_commands(ev: KeyboardEvent) {
         case '7': 
         case '8': 
         case '9': { 
-            console.log("switch to tab", ev.key);
             const msgnum:SwitchTabMessage = {action: "switchTab", tabNumber: parseInt(ev.key)};
             browser.runtime.sendMessage(msgnum);
             break;
         }
         case 'x': { 
-            console.log("close curr tab");
             const msgx:CloseTabMessage = { action: "closeTab" };
             browser.runtime.sendMessage(msgx);
             break;
         }
+        case 'u': {
+            const msgu: LastTabMessage = { action: "lastTab"};            
+            browser.runtime.sendMessage(msgu);
+            break;
+        }
         case 'escape': {
-            console.log("cancel prefix mode");
             deactivate_prefix_mode();
             break;
         }
-      default:
-            console.log("unknown command:", ev.key);
     }
     // Deactivate after command (except escape)
     if (ev.key.toLowerCase() !== 'escape') {

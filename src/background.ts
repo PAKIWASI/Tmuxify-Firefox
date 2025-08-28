@@ -1,5 +1,4 @@
 
-
 interface BaseMessage {
     action: string;
 }
@@ -25,6 +24,9 @@ interface CloseTabMessage extends BaseMessage {
     action: 'closeTab';
 }
 
+interface LastTabMessage extends BaseMessage {
+    action: 'lastTab'
+}
 
 // Union type for all possible messages
 type ExtensionMessage = 
@@ -33,6 +35,25 @@ type ExtensionMessage =
     | PrevTabMessage 
     | SwitchTabMessage 
     | CloseTabMessage
+    | LastTabMessage
+
+
+
+let lastTab: browser.tabs.Tab | null = null;
+let currTab: browser.tabs.Tab | null = null;
+
+//track tab switches
+browser.tabs.onActivated.addListener(async (activeInfo) => {
+    if (currTab) {
+        lastTab = currTab; // store previous curr tab as the last tab (if exists)
+    } 
+    try {  //update curr tab
+        currTab = await browser.tabs.get(activeInfo.tabId); 
+    }
+    catch (error) {
+        console.error("cant get curr tab:", error);
+    }
+});
 
 
 // Listen for messages from content script
@@ -58,6 +79,9 @@ browser.runtime.onMessage.addListener(async (Message: any) => {
             case 'closeTab':
                 await closeCurrentTab();
                 break;
+            case 'lastTab':
+                await switchToLastTab();
+                break;
         }
     } catch (error) {
         console.error('error message:', error);
@@ -66,6 +90,7 @@ browser.runtime.onMessage.addListener(async (Message: any) => {
 
 async function createNewTab(): Promise<void> {
     const currentTab = await getCurrentTab();
+    
     if (currentTab) {
         // create new tab next to current tab
         await browser.tabs.create({
@@ -126,8 +151,26 @@ async function switchToTabByNumber(tabNumber: number): Promise<void> {
 
 async function closeCurrentTab(): Promise<void> {
     const currentTab = await getCurrentTab();
+
     if (currentTab?.id) {
         await browser.tabs.remove(currentTab.id);
+    }
+}
+
+async function switchToLastTab(): Promise<void> {
+    if (lastTab?.id) {
+        try {
+            //check if the last tabs still exists
+            await browser.tabs.get(lastTab.id);
+            await browser.tabs.update(lastTab.id, {active: true});
+        }
+        catch (error) {
+            console.log("last tab no longer exists");
+            lastTab = null; 
+        }
+    }
+    else {
+        console.log("no last tab");
     }
 }
 
@@ -135,6 +178,4 @@ async function getCurrentTab(): Promise<browser.tabs.Tab> {
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
     return tabs[0] || null;
 }
-
-
 
