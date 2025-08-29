@@ -3,9 +3,6 @@ interface BaseMessage {
     action: string;
 }
 
-interface CreateTabMessage extends BaseMessage {
-    action: 'createTab';
-}
 
 interface NextTabMessage extends BaseMessage {
     action: 'nextTab';
@@ -20,9 +17,6 @@ interface SwitchTabMessage extends BaseMessage {
     tabNumber: number;
 }
 
-interface CloseTabMessage extends BaseMessage {
-    action: 'closeTab';
-}
 
 interface LastTabMessage extends BaseMessage {
     action: 'lastTab'
@@ -79,12 +73,7 @@ function handle_tmux_commands(ev: KeyboardEvent) {
     ev.preventDefault();
     ev.stopPropagation();
     switch(ev.key.toLowerCase()) {
-        case 'c': {
-            const msgc:CreateTabMessage = { action: "createTab" };
-            browser.runtime.sendMessage(msgc);
-            break;
-        }
-        case 'n': {
+       case 'n': {
             const msgn:NextTabMessage = {action: "nextTab"};
             browser.runtime.sendMessage(msgn);
             break;
@@ -107,12 +96,7 @@ function handle_tmux_commands(ev: KeyboardEvent) {
             browser.runtime.sendMessage(msgnum);
             break;
         }
-        case 'x': { 
-            const msgx:CloseTabMessage = { action: "closeTab" };
-            browser.runtime.sendMessage(msgx);
-            break;
-        }
-        case 'u': {
+       case 'u': {
             const msgu: LastTabMessage = { action: "lastTab"};            
             browser.runtime.sendMessage(msgu);
             break;

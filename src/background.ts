@@ -3,10 +3,6 @@ interface BaseMessage {
     action: string;
 }
 
-interface CreateTabMessage extends BaseMessage {
-    action: 'createTab';
-}
-
 interface NextTabMessage extends BaseMessage {
     action: 'nextTab';
 }
@@ -20,21 +16,15 @@ interface SwitchTabMessage extends BaseMessage {
     tabNumber: number;
 }
 
-interface CloseTabMessage extends BaseMessage {
-    action: 'closeTab';
-}
-
 interface LastTabMessage extends BaseMessage {
     action: 'lastTab'
 }
 
 // Union type for all possible messages
 type ExtensionMessage = 
-    | CreateTabMessage 
     | NextTabMessage 
     | PrevTabMessage 
     | SwitchTabMessage 
-    | CloseTabMessage
     | LastTabMessage
 
 
@@ -54,7 +44,15 @@ browser.tabs.onActivated.addListener(async (activeInfo) => {
         console.error("cant get curr tab:", error);
     }
 });
-
+//Clean up when tabs are removed 
+browser.tabs.onRemoved.addListener((tabId) => {
+    if (lastTab?.id === tabId) {
+        lastTab = null;
+    }
+    if (currTab?.id === tabId) {
+        currTab = null;
+    }
+});
 
 // Listen for messages from content script
 browser.runtime.onMessage.addListener(async (Message: any) => {
@@ -64,10 +62,7 @@ browser.runtime.onMessage.addListener(async (Message: any) => {
     
     try {
         switch (message.action) {
-            case 'createTab':
-                await createNewTab();
-                break;
-            case 'nextTab':
+           case 'nextTab':
                 await switchToNextTab();
                 break;
             case 'prevTab':
@@ -76,10 +71,7 @@ browser.runtime.onMessage.addListener(async (Message: any) => {
             case 'switchTab':
                 await switchToTabByNumber(message.tabNumber);
                 break;
-            case 'closeTab':
-                await closeCurrentTab();
-                break;
-            case 'lastTab':
+           case 'lastTab':
                 await switchToLastTab();
                 break;
         }
@@ -88,25 +80,12 @@ browser.runtime.onMessage.addListener(async (Message: any) => {
     }
 });
 
-async function createNewTab(): Promise<void> {
-    const currentTab = await getCurrentTab();
-    
-    if (currentTab) {
-        // create new tab next to current tab
-        await browser.tabs.create({
-            index: currentTab.index + 1,
-            active: true,
-        });
-    } else {
-        // fallback: create at end
-        await browser.tabs.create({});
-    }
-}
 
 async function switchToNextTab(): Promise<void> {
     const tabs = await browser.tabs.query({currentWindow: true});
     const currentTab = await getCurrentTab();
-    
+    lastTab = currentTab; 
+
     if (!currentTab || tabs.length <= 1) return;
     
     const currentIndex = tabs.findIndex(tab => tab.id === currentTab.id);
@@ -121,6 +100,7 @@ async function switchToNextTab(): Promise<void> {
 async function switchToPrevTab(): Promise<void> {
     const tabs = await browser.tabs.query({ currentWindow: true });
     const currentTab = await getCurrentTab();
+    lastTab = currentTab;
     
     if (!currentTab || tabs.length <= 1) return;
     
@@ -135,7 +115,8 @@ async function switchToPrevTab(): Promise<void> {
 
 async function switchToTabByNumber(tabNumber: number): Promise<void> {
     const tabs = await browser.tabs.query({ currentWindow: true });
-    
+    lastTab = await getCurrentTab();
+
     // Convert 1-based to 0-based index
     const targetIndex = tabNumber - 1;
     
@@ -149,13 +130,6 @@ async function switchToTabByNumber(tabNumber: number): Promise<void> {
     }
 }
 
-async function closeCurrentTab(): Promise<void> {
-    const currentTab = await getCurrentTab();
-
-    if (currentTab?.id) {
-        await browser.tabs.remove(currentTab.id);
-    }
-}
 
 async function switchToLastTab(): Promise<void> {
     if (lastTab?.id) {
@@ -178,4 +152,5 @@ async function getCurrentTab(): Promise<browser.tabs.Tab> {
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
     return tabs[0] || null;
 }
+
 
